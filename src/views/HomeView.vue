@@ -1,11 +1,30 @@
 <script setup lang="ts">
+// Importación de store de "User"
+import { useUserStore } from '@/stores/user';
+
+// Computed: Permite definir propiedades dinámicas que dependen de otras propiedades
+import { computed } from 'vue';
+
+// Constante encaergada de obtener el estado del store de usuario
+const userStore = useUserStore();
+
+// Constante "user" computada que mostrará el estado actual del usuario en store
+const user = computed(() => userStore.user);
+
 </script>
 
 <template>
   <main class="cont-principal">
-    <h1 class="titulo">¡Bienvenido!</h1>
+    <h1 class="titulo">¡Bienvenido/ a, {{user.username}}!</h1>
 
     <ion-icon name="accessibility-outline"></ion-icon>
+    <ion-icon name="accessibility-outline"></ion-icon>
+    <ion-icon name="accessibility-outline"></ion-icon>
+
+    <p class="informacion">
+      Contraseña ingresada: {{ user.password }} <br>
+      ¿Recordar información?: {{ user.remember }}
+    </p>
   </main>
 </template>
 
@@ -19,6 +38,19 @@
     font-size: 2em;
     font-weight: 400;
 
+    color: white;
+  }
+
+  ion-icon{
+    font-size: 2rem;
+
+    color: white;
+
+    padding: 1rem;
+  }
+
+  .informacion{
+    text-align: center;
     color: white;
   }
 </style>
