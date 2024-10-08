@@ -1,31 +1,31 @@
 <script setup lang="ts">
-// Importación de interfaz "User" como tipo
+// Import of "user" interface as type
 import type { User } from '@/models/UserModel';
 
-// Importación de store de "User"
+// Import of "user" store
 import { useUserStore } from '@/stores/user';
 
-// Importación de vue-router para manejo de rutas
+// Import of "vue-router" for route management
 import { useRouter } from 'vue-router';
 
-// Constante "userStore" para referenciar store de usuario
+// Constant "userStore" for store reference "user"
 const userStore = useUserStore();
 
-// Definimos constante para hacer uso de método "useRoute" -> objeto reactivo
+// Constant defined to use the "useRoute" method -> reactive object
 const router = useRouter();
 
-// Creamos una constante para recibir los datos del formulario
+// Constant defined to receive the form data
 const credenciales: User = ({
     username: '',
     password: '',
     remember: false
 })
 
-// Función flecha para enviar por parámetro las credenciales obtenidas al store -> se ejecuta cuando se envía formulario
+// Arrow function to send via parameter the credentials obtained to store -> executed when sending the form data
 const onSubmit = () => {
     userStore.setUser(credenciales);
 
-    // Se redirecciona a la vista raíz ("Home")
+    // Redirects to the root view ("Home")
     router.push({path: '/'});
 }
 
@@ -33,11 +33,11 @@ const onSubmit = () => {
 
 <template>
     <div class="wrapper">
-        <!-- @submit.prevent: Previene el comportamiento por defecto del formulario. Llama al método "handleSubmit" -->
+        <!-- @submit.prevent: Prevents the default behavior of the form. Calls the "handleSubmit" method -->
         <form id="loginForm" @submit.prevent="onSubmit">
             <h1>Inicio de Sesión</h1>
             <div class="input-bx">
-                <!-- v-model: Captura y envía los datos del formulario de forma bidireccional -->
+                <!-- v-model: Captures and sends form data bidirectionally -->
                 <input v-model="credenciales.username" name="username" type="text" placeholder="Ingrese su nombre de usuario..." required>
                 <ion-icon class="icon" name="person-circle"></ion-icon>
             </div>
@@ -55,8 +55,7 @@ const onSubmit = () => {
 </template>
 
 <style scoped>
-/* estilos del componente */
-
+/* Styles of the component */
 .wrapper {
     width: 400px;
     background: transparent;

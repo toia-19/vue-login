@@ -1,23 +1,21 @@
-// Los "stores" constan de estados y acciones mutables; puede asociarse a varios componentes
+// "stores" consist of mutable states and actions; can be associated with several components
 import { defineStore } from 'pinia';
 
-// Importación de interfaz de usuario pre definida
+// Import of "user" interface pre-defined
 import type { User } from '@/models/UserModel';
 
-// Definimos store con nombre "user" para referenciarlo
+// We define store with name "user" to reference it
 export const useUserStore = defineStore('user', {
-    // state -> función encargada de retornar un objeto; define el estado del store
+    // state -> Function in charge of returning an object; defines the state of the store
     state: () => ({
-        /*
-            Indicamos que propiedad "user" podrá ser un objeto de tipo "User" 
-        */
+        // We indicate that the propiety "user" can be an objet of type "user"
         user: {} as User,
     }),
-    // actions -> objeto que contiene métodos capaces de modificar el estado del store
+    // actions -> Object que contiene métodos capaces de modificar el estado del store
     actions: {
         /*
-            setUser: método que recibe al objeto de tipo "User" y lo asigna a la propiedad 
-            "user" del estado.
+            setUser: Method that receives the object of type “User” and assigns it to 
+            the property “user” of the state.
         */
         setUser(user: User) {
             this.user = user;

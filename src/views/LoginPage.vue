@@ -1,11 +1,12 @@
 <script setup lang="ts">
-// Importación de componente para formulario
+
+// Import of form component
 import LoginForm from '@/components/LoginForm.vue';
 
 </script>
 
 <template>
-    <!-- Mostramos formulario de Login -->
+    <!-- Show Login form -->
     <LoginForm/>
 </template>
 

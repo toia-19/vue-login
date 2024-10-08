@@ -1,14 +1,14 @@
 <script setup lang="ts">
-// Importación de store de "User"
+// Import of store: "user"
 import { useUserStore } from '@/stores/user';
 
 // Computed: Permite definir propiedades dinámicas que dependen de otras propiedades
 import { computed } from 'vue';
 
-// Constante encaergada de obtener el estado del store de usuario
+// Constant in charge of obtaining the status of the "user" store
 const userStore = useUserStore();
 
-// Constante "user" computada que mostrará el estado actual del usuario en store
+// Computed "user" constant that will display the user's current status in store
 const user = computed(() => userStore.user);
 
 </script>
