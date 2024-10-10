@@ -16,9 +16,15 @@ const router = useRouter();
 
 // Constant defined to receive the form data
 const credenciales: User = ({
+    id: 1,
+    firstname: '',
+    lastname: '',
     username: '',
     password: '',
-    remember: false
+    remember: false,
+    isAdmin: true,
+    jwtToken: '', // optional
+    refreshTokens: []
 })
 
 // Arrow function to send via parameter the credentials obtained to store -> executed when sending the form data
@@ -26,7 +32,7 @@ const onSubmit = () => {
     userStore.setUser(credenciales);
 
     // Redirects to the root view ("Home")
-    router.push({path: '/'});
+    router.push({path: '/home'});
 }
 
 </script>
