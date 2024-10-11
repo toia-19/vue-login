@@ -1,62 +1,93 @@
 <script setup lang="ts">
-// Import of "user" interface as type
-import type { User } from '@/models/UserModel';
-
-// Import of "user" store
+// Import of "user" store (local)
 import { useUserStore } from '@/stores/user';
 
-// Import of "vue-router" for route management
+// Import of "vue-router" for route management (local)
 import { useRouter } from 'vue-router';
+
+// Import of "auth" store (local)
+import { useAuthStore } from '@/stores/authStore';
+
+// Import of bookstores
+import { Form, Field } from 'vee-validate';
+import * as Yup from 'yup';
 
 // Constant "userStore" for store reference "user"
 const userStore = useUserStore();
 
+// Constant "useAuth" for store reference authentication
+const authStore = useAuthStore();
+
 // Constant defined to use the "useRoute" method -> reactive object
 const router = useRouter();
 
-// Constant defined to receive the form data
-const credenciales: User = ({
-    id: 1,
-    firstname: '',
-    lastname: '',
-    username: '',
-    password: '',
-    remember: false,
-    isAdmin: true,
-    jwtToken: '', // optional
-    refreshTokens: []
+if (authStore.auth.data){
+    router.push('/home');
+}
+
+const schema = Yup.object().shape({
+    username: Yup.string().required("¡Usuario requerido!"),
+    password: Yup.string().required("¡Contraseña requerida!")
 })
 
-// Arrow function to send via parameter the credentials obtained to store -> executed when sending the form data
-const onSubmit = () => {
-    userStore.setUser(credenciales);
 
-    // Redirects to the root view ("Home")
-    router.push({path: '/home'});
+// Arrow function to send via parameter the credentials obtained to store -> executed when sending the form data
+const handleSubmit = (values: any, { setErrors }: any) => {
+    const { username, password } = values;
+
+    return authStore.login(username, password).then(() => {
+        router.push("/login");
+    })
+    .catch(error => setErrors({ apiError: error }) )
 }
 
 </script>
 
 <template>
     <div class="wrapper">
+        <!-- <Form> -> schema (Yup) -->
+
         <!-- @submit.prevent: Prevents the default behavior of the form. Calls the "handleSubmit" method -->
-        <form id="loginForm" @submit.prevent="onSubmit">
+        <Form id="loginForm" @submit.prevent="handleSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
             <h1>Inicio de Sesión</h1>
+
+            <!-- Username -->
             <div class="input-bx">
                 <!-- v-model: Captures and sends form data bidirectionally -->
-                <input v-model="credenciales.username" name="username" type="text" placeholder="Ingrese su nombre de usuario..." required>
+                <Field name="username" type="text" :class="{'is-invalid': errors.username || errors.apierror}" 
+                placeholder="Ingrese su nombre de usuario..." required/>
+                
                 <ion-icon class="icon" name="person-circle"></ion-icon>
+
+                <div class="invalid-feedback">{{ errors.username }}</div>
             </div>
+
+            <!-- Password -->
             <div class="input-bx">
-                <input v-model="credenciales.password" name="password" type="password" placeholder="Ingrese su contraseña..." required>
+                <Field name="password" type="password" :class="{'is-invalid': errors.password || errors.apierror}" 
+                placeholder="Ingrese su contraseña..." required/>
+                
                 <ion-icon class="icon" name="lock-closed"></ion-icon>
+
+                <div class="invalid-feedback">{{ errors.password }}</div>
             </div>
+
+            <!-- RememberMe -->
             <div class="remember-forgot">
-                <label><input v-model="credenciales.remember" type="checkbox" name="remember">Recordarme</label>
+                <label><input type="checkbox" name="remember">Recordarme</label>
                 <a href="#">Olvidaste tu contraseña</a>
             </div>
-            <button type="submit" class="btn">Ingresar</button>
-        </form>
+            <button type="submit" class="btn">
+                <!-- Spinner | v-show -> conected with boolean -->
+                <span v-show="isSubmitting" class="loader"></span>
+
+                <!-- Text boton -->
+                <p v-show="!isSubmitting">Ingresar</p>
+            </button>
+
+            <!-- Error alerted -->
+            <div v-if="errors.apiError" class="error-alert">{{ errors.apiError }}</div>
+        </Form>
     </div>
 </template>
 
@@ -142,4 +173,62 @@ const onSubmit = () => {
     font-weight: 600;
     color: #333;
 }
+
+.wrapper button p {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+}
+
+.loader {
+    margin: auto 0;
+    width: 24px;
+    height: 24px;
+    border: 4px solid #800080;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ERROR */
+.wrapper .input-bx input.is-invalid {
+    width: 100%;
+    height: 100%;
+    background: rgba(250, 150, 150, 0.1);
+    border: 2px solid rgba(255, 0, 0, 0.2);
+    color: #ff0000;
+}
+
+.wrapper .input-bx input.is-invalid::placeholder {
+    color: #ff0000;
+}
+
+.wrapper .input-bx .invalid-feedback {
+    padding: 0px 16px;
+    margin: 0;
+    color: #ff0000;
+    font-weight: 300;
+}
+
+.error-alert{
+    margin: 16px 0 0 0;
+    width: 100%;
+    background: transparent;
+    color: #ff0000;
+    text-align: center;
+    font-weight: 400;
+}
+
 </style>

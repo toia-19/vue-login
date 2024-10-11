@@ -2,6 +2,9 @@
 // Import of store: "user"
 import { useUserStore } from '@/stores/user';
 
+// Import of store: "auth"
+import { useAuthStore } from '@/stores/authStore';
+
 // Computed: Permite definir propiedades dinámicas que dependen de otras propiedades
 import { computed } from 'vue';
 
@@ -11,20 +14,19 @@ const userStore = useUserStore();
 // Computed "user" constant that will display the user's current status in store
 const user = computed(() => userStore.user);
 
+const authStore = useAuthStore();
+
+function logout() {
+  authStore.logout();
+}
+
 </script>
 
 <template>
   <main class="cont-principal">
     <h1 class="titulo">¡Bienvenido/ a, {{user.username}}!</h1>
 
-    <ion-icon name="accessibility-outline"></ion-icon>
-    <ion-icon name="accessibility-outline"></ion-icon>
-    <ion-icon name="accessibility-outline"></ion-icon>
-
-    <p class="informacion">
-      Contraseña ingresada: {{ user.password }} <br>
-      ¿Recordar información?: {{ user.remember }}
-    </p>
+    <button @click="logout">Logout</button>
   </main>
 </template>
 
